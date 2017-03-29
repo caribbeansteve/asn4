@@ -53,11 +53,20 @@ graph *initialPass(FILE *fp, DArray *edges){
 	displayDArray(stdout, edges);
 	printf("\n");
 	g = makeGraph(largest);
-	return craftGraph(g, edges);
+	craftGraph(g, edges);
+	printGraph(stdout, g);
+	return g;
+
 }
 
 graph *craftGraph(graph *g, DArray *edges){
-	
+	edge *temp;
+
+	while(sizeDArray(edges)){
+		temp = removeDArray(edges);
+		addEdge(g, temp->start->val, temp->end->val, temp->weight);
+	}
+	return g;
 }
 
 edge *makeEdge(vertex *v, vertex *u, int w){
@@ -85,24 +94,50 @@ void addEdge(graph *g, int v, int w, int weight){
 	vertex *larger = v > w ? makeVertex(v) : makeVertex(w);
 
 	edge *e = getEdge(g, smaller, larger);
-	if(!e){
+	if(e){
 		if(weight < e->weight){
 			e->weight = weight;
 		}
 		return;
 	}
 
-	g->adjMatrix[smaller->val][larger->val] = makeEdge(smaller, larger, w);
+	g->adjMatrix[smaller->val][larger->val] = makeEdge(smaller, larger, weight);
 }
 
-graph *makeGraph(int size){
+graph *makeGraph(int s){
 	graph *newG = malloc(sizeof(graph));
-	newG->adjMatrix = malloc(size * size * sizeof(edge));
+	newG->adjMatrix = malloc(s * sizeof(edge));
+	for(int i = 0; i <= s; i++){
+		newG->adjMatrix[i] = malloc(s * sizeof(edge));
+	}
+	newG->size = s;
 	return newG;
 }
 
+void printGraph(FILE *fp, graph *g){
+	edge *temp;
+	for(int i = 0; i <= g->size; i++){
+		fprintf(fp, "%d:[", i);
+		for(int j = 0; j <= g->size; j++){
+			temp = g->adjMatrix[i][j];
+			if(temp){
+				fprintf(fp, "%d", temp->weight);
+			} else {
+				fprintf(fp, "0");
+			}
+			if(j != g->size){
+				fprintf(fp, ", ");
+			}
+		}
+		fprintf(fp, "]\n");
+	}
+}
+
 edge *getEdge(graph *g, vertex *v, vertex *w){
-	return (edge *) g->adjMatrix[v->val][w->val];
+	if(g->adjMatrix[v->val][w->val]){
+		return (edge *) g->adjMatrix[v->val][w->val];
+	}
+	return 0;
 }
 
 vertex *makeVertex(int value){

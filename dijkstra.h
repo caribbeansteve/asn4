@@ -27,6 +27,7 @@ typedef struct edge {
 
 typedef struct graph{
 	edge ***adjMatrix;
+	int size;
 } graph;
 
 extern edge *makeEdge(vertex *, vertex *, int);
@@ -36,6 +37,7 @@ extern edge *getEdge(graph *, vertex *, vertex *);
 extern void printEdge(FILE *fp, void *ed);
 extern graph *initialPass(FILE *fp, DArray *edges);
 extern graph *craftGraph(graph *g, DArray *edges);
+extern void printGraph(FILE *fp, graph *g);
 
 extern vertex *makeVertex(int );
 extern void printVertex(FILE *, void *);
