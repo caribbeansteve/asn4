@@ -102,7 +102,7 @@ void deleteBinomial(Binomial *b, BinomialNode *n){
 void decreaseKeyBinomial(Binomial *b, BinomialNode *n, void *value){
 	n->value = value;
 	bubbleUp(b, n);
-	if(b->compare(b->extreme->value, n->value) > 0){
+	if(b->compare(b->extreme->value, n->value) < 0){
 		b->extreme = n;
 	}
 }
@@ -173,7 +173,10 @@ void displayBinomial(FILE *fp,Binomial *b){
 	BinomialNode *binTemp;
 	int size = sizeDArray(b->rootlist);
 	queue *q = newQueue(b->display);
-
+	if(b->size <= 0){
+		fprintf(fp, "%d:", level++);
+		return;
+	}
 	for(int i = 0; i < size; i++){
 		if(getDArray(b->rootlist, i) != 0){
 			enqueue(q, getDArray(b->rootlist, i));

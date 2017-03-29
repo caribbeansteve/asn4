@@ -1,4 +1,4 @@
-OBJS = darray.o integer.o binomial.o sll.o queue.o
+OBJS = darray.o integer.o binomial.o sll.o queue.o scanner.o
 CC = gcc
 FLAGS = gcc -Wall -g -std=c99 
 
@@ -14,7 +14,9 @@ queue.o: queue.c queue.h
 	$(FLAGS) -c queue.c
 sll.o: sll.c sll.h
 	$(FLAGS) -c sll.c
+scanner.o: scanner.c scanner.h
+	$(FLAGS) -c scanner.c
 clean:
 	rm -f *.o
 test:
-	./dijkstra
+	./dijkstra 
