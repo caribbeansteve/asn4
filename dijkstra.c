@@ -5,18 +5,54 @@
 int main(){
 	//1. Read in the file and store the smallest and largest int nums to a val
 	FILE *fp = fopen("testfile.txt", "r+");
+	Binomial *b = newBinomial(printVertex, compareVertex, updateVertex);
 	DArray *edges = newDArray(printEdge);
-	initialPass(fp, edges);
+	graph *g = makeGraph(10);
+	//This will return a stored adjacency matrix, ready to go for dijkstra
+	//Need to add a param for the heap of vertexes
+	int root = initialPass(fp, edges, b, &g);
+	printGraph(stdout, g);
+	printf("Root Value: %d\n", root);
+	displayBinomial(stdout, b);
+
 	return 0;
 }
 
-graph *initialPass(FILE *fp, DArray *edges){
-	graph *g;
-	int largest = -1;
-	int smallest = INFIN;
+
+Binomial *dijkstra(int root, graph *g, DArray *edges, Binomial *b){
+	vertex* currentVert;
+	edge *currentEdge;
+	int smaller; int larger;
+	int to = g->size;
+	int sum = 0;
+	Binomial *span = newBinomial(printVertex, compareVertex, updateVertex);
+
+	while(sizeBinomial(b)){
+		currentVert = (vertex *) extractMin(b);
+		for(int i = 0; i < g->gize; i++){
+			currentEdge = g->adjMatrix[current][i]
+			if(currentEdge){
+				 
+			}
+		}
+	}
+}
+
+
+
+
+
+int initialPass(FILE *fp, DArray *edges, Binomial *b, graph **g){
+	int largest = -1; int size = 10;
+	int smallest = PINFINITY;
 	int larger = -1; int smaller = -1;
-	int first = -1; int second = -1; int weight = -1;
+	int first = -1; int second = -1; int weight = -1; 
+
+	vertex *f = 0; vertex *s = 0;
+	BinomialNode *inserter = 0;
 	char *current = readToken(fp);
+	int *check = calloc(size + 1, sizeof(int));
+	int *temp;
 
 	//pass over everything and grab the values, adding them to the edge array
 	while(current){
@@ -39,23 +75,45 @@ graph *initialPass(FILE *fp, DArray *edges){
 				smaller = first;
 			}
 			//check if smallest or largest so that we know where to begin graph
-			if(larger > largest) largest = larger;
-			if(smaller > smallest) smallest = smaller;
+			if(larger > largest){
+				//could cause issues
+				if(larger > size){
+					size = larger;
+					temp = calloc(size + 1, sizeof(int));
+					for(int i = 0; i < largest + 1; i++){
+						temp[i] = check[i];
+					}
+					check = temp;
+				}
+				largest = larger;
+			} 
+			if(smaller < smallest && smaller != -1) smallest = smaller;
 
+			f = makeVertex(smaller);
+			s = makeVertex(larger);
+
+			//check if the vertex is in the list and add it
+			if(!check[smaller]){
+				check[smaller] = 1;
+				inserter = insertBinomial(b, (void *) f);
+				f->this = inserter;
+			} 
+			if(!check[larger]){
+				check[larger] = 1;
+				inserter = insertBinomial(b, (void *) s);
+				s->this = inserter;
+			} 
 			//insert the edge into the edge array
-			insertDArray(edges, (void *) makeEdge(makeVertex(smaller), makeVertex(larger), weight));
-
+			insertDArray(edges, (void *) makeEdge(f, s, weight));
 			//reset temp variables
 			first = -1; second = -1; weight = -1; smaller = -1; larger = -1;
+			f = 0; s = 0; inserter = 0;
 		}
 		current = readToken(fp);
 	}
-	displayDArray(stdout, edges);
-	printf("\n");
-	g = makeGraph(largest);
-	craftGraph(g, edges);
-	printGraph(stdout, g);
-	return g;
+	*g = makeGraph(largest);
+	craftGraph(*g, edges);
+	return smallest;
 
 }
 
@@ -142,7 +200,7 @@ edge *getEdge(graph *g, vertex *v, vertex *w){
 
 vertex *makeVertex(int value){
 	vertex *newV = malloc(sizeof(vertex));
-	newV->distance = INFIN;
+	newV->distance = -1;
 	newV->visited = 0;
 	newV->val = value;
 	newV->pred = newV;
@@ -162,9 +220,18 @@ void printVertex(FILE *fp, void *value){
 void updateVertex(void *vert, BinomialNode *b){
 	vertex *v = (vertex *) vert;
 	v->this = b;
+	//More to this
 }
 int compareVertex(void *v, void *w){
-	return 0;
+	vertex *a = (vertex *) v;
+	vertex *b = (vertex *) w;
+	if(a->distance == -1 && b->distance != -1){
+		return -1;
+	} if(b->distance == -1 && a->distance != -1){
+		return 1;
+	}
+
+	return b->distance - a->distance;
 }
 
 

@@ -15,7 +15,7 @@ extern void displayInteger(FILE *,void *);
 extern int compareInteger(void *,void *);
 extern void freeInteger(integer *);
 
-#define PINFINITY IN_MAX
+#define PINFINITY 2147483647
 #define NINFINITY IN_MIN
 
 #endif

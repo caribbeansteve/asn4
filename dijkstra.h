@@ -35,7 +35,7 @@ extern graph *makeGraph(int);
 extern void addEdge(graph *g, int , int , int );
 extern edge *getEdge(graph *, vertex *, vertex *);
 extern void printEdge(FILE *fp, void *ed);
-extern graph *initialPass(FILE *fp, DArray *edges);
+extern int initialPass(FILE *fp, DArray *edges, Binomial *b, graph **g);
 extern graph *craftGraph(graph *g, DArray *edges);
 extern void printGraph(FILE *fp, graph *g);
 

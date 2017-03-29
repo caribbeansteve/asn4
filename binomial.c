@@ -85,6 +85,7 @@ BinomialNode *combine(Binomial *b, BinomialNode *x, BinomialNode *y){
 		int i = sizeDArray(x->children);
 		setDArray(y->children, i, (void*) x);
 		x->parent = y;
+		if()
 		return y;
 	}
 }
@@ -115,7 +116,6 @@ BinomialNode *bubbleUp(Binomial *b, BinomialNode *n){
 	} else {
 		void *temp = n->parent->value;
 		if(b->update){
-			
 			b->update(n->value, n->parent);
 			b->update(temp, n);
 		}
